@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>My Mutual Funds</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+		.card {
+			margin-bottom: 20px;
+		}
+		.card-header {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1 class="text-center my-5" style="color: #81429e; text-decoration: underline">List Of Complete Mutual Fund</h1>
+		<div id="mf-list"></div>
+	</div>
+	<script>
+		async function fetchMFData() {
+			const response = await fetch('https://api.mfapi.in/mf');
+			const mfData = await response.json();
+			return mfData;
+		}
+        function createMFCard(mf) {
+    const card = document.createElement('div');
+    card.classList.add('card');
+
+    const infoIcon = document.createElement('i');
+    infoIcon.classList.add('fa', 'fa-info-circle');
+    infoIcon.style.color = '#3385ff';
+
+
+    const cardHeader = document.createElement('div');
+    cardHeader.classList.add('card-header', 'd-flex', 'justify-content-between', 'align-items-center');
+    cardHeader.appendChild(infoIcon);
+    card.appendChild(cardHeader);
+
+    const cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
+
+    for (const [key, value] of Object.entries(mf)) {
+        const cardText = document.createElement('p');
+        cardText.classList.add('card-text');
+        cardText.textContent = `${key}: ${value}`;
+        cardBody.appendChild(cardText);
+    }
+
+    card.appendChild(cardBody);
+
+    return card;
+}
+
+
+		async function displayMFData() {
+			const mfData = await fetchMFData();
+			const mfList = document.getElementById('mf-list');
+
+			mfData.forEach(mf => {
+				const card = createMFCard(mf);
+				mfList.appendChild(card);
+			});
+		}
+
+		displayMFData();
+	</script>
+</body>
+</html>
